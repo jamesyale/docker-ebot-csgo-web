@@ -10,7 +10,7 @@ RUN mkdir ${homedir} && curl -L https://github.com/deStrO/eBot-CSGO-Web/archive/
 
 RUN a2enmod rewrite
 
-RUN sed -i 's/192.168.1.1/ebot/g' $homedir/ebot-csgo-web/config/app_user.yml
+RUN sed -i 's/192.168.1.1/172.17.42.1/g' $homedir/ebot-csgo-web/config/app_user.yml
 
 RUN sed -i 's@#RewriteBase /@RewriteBase /ebot-csgo@g' $homedir/ebot-csgo-web/web/.htaccess
 
