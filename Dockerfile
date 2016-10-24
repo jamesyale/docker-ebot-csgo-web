@@ -20,8 +20,10 @@ RUN sed -i 's@#RewriteBase /@RewriteBase /ebot-csgo@g' $homedir/ebot-csgo-web/we
 
 COPY ebotv3.conf /etc/apache2/conf-enabled/ebotv3.conf
 
+COPY wait-for-it.sh /tmp/
+
 RUN echo 'php_admin_value date.timezone = "Etc/UTC" >> /etc/apache2/conf-enabled/ebotv3.conf'
 
 WORKDIR $homedir/ebot-csgo-web
 
-CMD ["sh", "-c", "sleep 10 ; php symfony configure:database 'mysql:host=mysql;dbname=ebotv3' ebotv3 ebotv3 ; php symfony doctrine:insert-sql; php symfony guard:create-user --is-super-admin admin@ebot admin password ; php symfony cc ; rm -rf $homedir/ebot-csgo-web/web/installation ; apachectl stop ; apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND"]
+CMD ["sh", "-c", "bash /tmp/wait-for-it.sh -h mysql -p 3306 -t 0; php symfony configure:database 'mysql:host=mysql;dbname=ebotv3' ebotv3 ebotv3 ; php symfony doctrine:insert-sql; php symfony guard:create-user --is-super-admin admin@ebot admin password ; php symfony cc ; rm -rf $homedir/ebot-csgo-web/web/installation ; apachectl stop ; apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND"]
